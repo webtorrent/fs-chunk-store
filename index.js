@@ -10,9 +10,14 @@ function Storage (chunkLength, opts) {
   var self = this
   if (!(self instanceof Storage)) return new Storage(chunkLength, opts)
 
-  self.path = path.resolve(opts.path)
   self.chunkLength = Number(chunkLength)
+  self.path = path.resolve(opts.path)
   self.closed = false
+
+  if (opts.length) {
+    self.lastChunkLength = (opts.length % self.chunkLength) || self.chunkLength
+    self.lastChunkIndex = Math.ceil(opts.length / self.chunkLength) - 1
+  }
 
   if (!self.path) throw new Error('First argument must be a file path')
   if (!self.chunkLength) throw new Error('Second argument must be a chunk length')
@@ -31,12 +36,16 @@ function Storage (chunkLength, opts) {
 
 Storage.prototype.put = function (index, buf, cb) {
   var self = this
+  if (!cb) cb = noop
   if (self.closed) return nextTick(cb, new Error('Storage is closed'))
   self._open(function (err, file) {
     if (err) return cb(err)
-    if (buf.length !== self.chunkLength) {
-      if (cb) cb(new Error('Chunk length must be ' + self.chunkLength))
-      return
+    var isLastChunk = (index === self.lastChunkIndex)
+    if (isLastChunk && buf.length !== self.lastChunkLength) {
+      return cb(new Error('Last chunk length must be ' + self.lastChunkLength))
+    }
+    if (!isLastChunk && buf.length !== self.chunkLength) {
+      return cb(new Error('Chunk length must be ' + self.chunkLength))
     }
     file.write(index * self.chunkLength, buf, cb)
   })
@@ -48,10 +57,16 @@ Storage.prototype.get = function (index, opts, cb) {
   if (self.closed) return nextTick(cb, new Error('Storage is closed'))
   self._open(function (err, file) {
     if (err) return cb(err)
-    file.read(index * self.chunkLength, self.chunkLength, function (err, buf) {
+    var chunkLength = (index === self.lastChunkIndex)
+      ? self.lastChunkLength
+      : self.chunkLength
+    file.read(index * self.chunkLength, chunkLength, function (err, buf) {
       if (!opts) return cb(null, buf)
       var offset = opts.offset || 0
       var len = opts.length || (buf.length - offset)
+      if (offset < 0 || len <= 0 || offset + len > chunkLength) {
+        return cb(new Error('Invalid offset and/or length: Max is ' + chunkLength))
+      }
       cb(null, buf.slice(offset, len + offset))
     })
   })
@@ -80,3 +95,5 @@ function nextTick (cb, err, val) {
     if (cb) cb(err, val)
   })
 }
+
+function noop () {}
