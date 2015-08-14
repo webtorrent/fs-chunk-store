@@ -1,26 +1,31 @@
 module.exports = Storage
 
+var cuid = require('cuid')
+var fs = require('fs')
 var mkdirp = require('mkdirp')
+var os = require('os')
 var path = require('path')
 var raf = require('random-access-file')
 var rimraf = require('rimraf')
 var thunky = require('thunky')
 
+var TMP = fs.existsSync('/tmp') ? '/tmp' : os.tmpDir()
+
 function Storage (chunkLength, opts) {
   var self = this
   if (!(self instanceof Storage)) return new Storage(chunkLength, opts)
+  if (!opts) opts = {}
 
   self.chunkLength = Number(chunkLength)
-  self.path = path.resolve(opts.path)
+  if (!self.chunkLength) throw new Error('First argument must be a chunk length')
+
+  self.path = path.resolve(opts.path || path.join(TMP, 'fs-chunk-store', cuid()))
   self.closed = false
 
   if (opts.length) {
     self.lastChunkLength = (opts.length % self.chunkLength) || self.chunkLength
     self.lastChunkIndex = Math.ceil(opts.length / self.chunkLength) - 1
   }
-
-  if (!self.path) throw new Error('First argument must be a file path')
-  if (!self.chunkLength) throw new Error('Second argument must be a chunk length')
 
   self._open = thunky(function (cb) {
     if (self.closed) return cb(new Error('Storage is closed'))

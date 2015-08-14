@@ -20,7 +20,7 @@ npm install fs-chunk-store
 ``` js
 var FSChunkStore = require('fs-chunk-store')
 var chunks = new FSChunkStore(10, {
-  path: '/tmp/my_file', // required: path to backing file (will be created)
+  path: '/tmp/my_file', // optional: path to backing file (will be created, if necessary)
   length: 100 // optional: total file length (in bytes)
 })
 
