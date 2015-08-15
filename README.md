@@ -17,13 +17,34 @@ npm install fs-chunk-store
 
 ## Usage
 
+### Back the store with a single file
+
 ``` js
 var FSChunkStore = require('fs-chunk-store')
-var chunks = new FSChunkStore(10, {
-  path: '/tmp/my_file', // optional: path to backing file (will be created, if necessary)
-  length: 100 // optional: total file length (in bytes)
-})
 
+var chunks = new FSChunkStore(10, {
+  path: '/tmp/my_file', // optional: path to file (default: temp file will be used)
+  length: 100 // optional: file length in bytes (default: file expands based on `put`s)
+})
+```
+
+### Back the store with multiple files
+
+``` js
+var FSChunkStore = require('fs-chunk-store')
+
+var chunks = new FSChunkStore(10, {
+  files: [
+    { path: 'folder/file1.txt', length: 12 },
+    { path: 'folder/file2.txt', length: 8 },
+    { path: 'folder/file3.txt', length: 30 }
+  ]
+})
+```
+
+### put, get, close, destroy
+
+```js
 chunks.put(0, new Buffer('0123456789'), function (err) {
   if (err) throw err
 
