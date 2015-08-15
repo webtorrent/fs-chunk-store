@@ -103,6 +103,7 @@ function Storage (chunkLength, opts) {
 
 Storage.prototype.put = function (index, buf, cb) {
   var self = this
+  if (typeof cb !== 'function') cb = noop
   if (self.closed) return nextTick(cb, new Error('Storage is closed'))
 
   var isLastChunk = (index === self.lastChunkIndex)
