@@ -163,7 +163,6 @@ test('multiple files', function (t) {
           t.error(err)
           t.deepEqual(chunk, new Buffer('abcdefghij'))
           store.put(2, new Buffer('klmnop'), function (err) {
-            console.log('hi')
             t.error(err)
             t.deepEqual(fs.readFileSync('tmp2/file4'), new Buffer('ijklmnop'))
             store.get(2, function (err, chunk) {
