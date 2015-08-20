@@ -35,7 +35,7 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/feross/fs-chunk-store.git"
+    "url": "git://github.com/feross/fs-chunk-store.git"
   },
   "scripts": {
     "test": "standard && node test"
