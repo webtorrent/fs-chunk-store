@@ -1,16 +1,16 @@
 module.exports = Storage
 
 var cuid = require('cuid')
-var fs = require('fs')
 var mkdirp = require('mkdirp')
 var os = require('os')
 var parallel = require('run-parallel')
 var path = require('path')
+var pathExists = require('path-exists')
 var raf = require('random-access-file')
 var rimraf = require('rimraf')
 var thunky = require('thunky')
 
-var TMP = fs.existsSync('/tmp') ? '/tmp' : os.tmpDir()
+var TMP = pathExists.sync('/tmp') ? '/tmp' : os.tmpDir()
 
 function Storage (chunkLength, opts) {
   var self = this
