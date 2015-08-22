@@ -24,9 +24,6 @@ function Storage (chunkLength, opts) {
     if (!Array.isArray(opts.files)) {
       throw new Error('`files` option must be an array')
     }
-    if (opts.length != null || opts.path != null) {
-      throw new Error('`files` option cannot be used with `path` or `length` options')
-    }
     self.files = opts.files.slice(0).map(function (file, i, files) {
       if (file.path == null) throw new Error('File is missing `path` property')
       if (file.length == null) throw new Error('File is missing `length` property')
@@ -41,7 +38,9 @@ function Storage (chunkLength, opts) {
       return file
     })
     self.length = self.files.reduce(function (sum, file) { return sum + file.length }, 0)
-
+    if (opts.length != null && opts.length !== self.length) {
+      throw new Error('total `files` length is not equal to explicit `length` option')
+    }
   } else {
     var len = Number(opts.length) || Infinity
     self.files = [{
