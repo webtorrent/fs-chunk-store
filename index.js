@@ -107,10 +107,10 @@ Storage.prototype.put = function (index, buf, cb) {
 
   var isLastChunk = (index === self.lastChunkIndex)
   if (isLastChunk && buf.length !== self.lastChunkLength) {
-    return cb(new Error('Last chunk length must be ' + self.lastChunkLength))
+    return nextTick(cb, new Error('Last chunk length must be ' + self.lastChunkLength))
   }
   if (!isLastChunk && buf.length !== self.chunkLength) {
-    return cb(new Error('Chunk length must be ' + self.chunkLength))
+    return nextTick(cb, new Error('Chunk length must be ' + self.chunkLength))
   }
 
   if (self.length === Infinity) {
