@@ -7,7 +7,7 @@
 [downloads-image]: https://img.shields.io/npm/dm/fs-chunk-store.svg?style=flat
 [downloads-url]: https://npmjs.org/package/fs-chunk-store
 
-### Filesystem (fs) chunk store that is [abstract-chunk-store](https://github.com/mafintosh/abstract-chunk-store) compliant
+#### Filesystem (fs) chunk store that is [abstract-chunk-store](https://github.com/mafintosh/abstract-chunk-store) compliant
 
 ## Install
 
