@@ -156,7 +156,6 @@ Storage.prototype.get = function (index, opts, cb) {
       var offset = (index * self.chunkLength) + rangeFrom
       file.read(offset, rangeTo - rangeFrom, cb)
     })
-
   } else {
     var targets = self.chunkMap[index]
     if (!targets) return nextTick(cb, new Error('no files matching the request range'))
