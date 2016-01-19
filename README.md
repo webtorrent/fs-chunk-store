@@ -1,10 +1,10 @@
 # fs-chunk-store [![travis][travis-image]][travis-url] [![npm][npm-image]][npm-url] [![downloads][downloads-image]][downloads-url]
 
-[travis-image]: https://img.shields.io/travis/feross/fs-chunk-store.svg?style=flat
+[travis-image]: https://img.shields.io/travis/feross/fs-chunk-store/master.svg
 [travis-url]: https://travis-ci.org/feross/fs-chunk-store
-[npm-image]: https://img.shields.io/npm/v/fs-chunk-store.svg?style=flat
+[npm-image]: https://img.shields.io/npm/v/fs-chunk-store.svg
 [npm-url]: https://npmjs.org/package/fs-chunk-store
-[downloads-image]: https://img.shields.io/npm/dm/fs-chunk-store.svg?style=flat
+[downloads-image]: https://img.shields.io/npm/dm/fs-chunk-store.svg
 [downloads-url]: https://npmjs.org/package/fs-chunk-store
 
 #### Filesystem (fs) chunk store that is [abstract-chunk-store](https://github.com/mafintosh/abstract-chunk-store) compliant
