@@ -1,6 +1,6 @@
 module.exports = Storage
 
-var cuid = require('cuid')
+var hat = require('hat')
 var mkdirp = require('mkdirp')
 var os = require('os')
 var parallel = require('run-parallel')
@@ -45,7 +45,7 @@ function Storage (chunkLength, opts) {
     var len = Number(opts.length) || Infinity
     self.files = [{
       offset: 0,
-      path: path.resolve(opts.path || path.join(TMP, 'fs-chunk-store', cuid())),
+      path: path.resolve(opts.path || path.join(TMP, 'fs-chunk-store', hat(128))),
       length: len
     }]
     self.length = len
