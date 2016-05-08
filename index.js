@@ -1,16 +1,21 @@
 module.exports = Storage
 
+var fs = require('fs')
 var hat = require('hat')
 var mkdirp = require('mkdirp')
 var os = require('os')
 var parallel = require('run-parallel')
 var path = require('path')
-var pathExists = require('path-exists')
 var raf = require('random-access-file')
 var rimraf = require('rimraf')
 var thunky = require('thunky')
 
-var TMP = pathExists.sync('/tmp') ? '/tmp' : os.tmpDir()
+var TMP
+try {
+  TMP = fs.statSync('/tmp') && '/tmp'
+} catch (err) {
+  TMP = os.tmpDir()
+}
 
 function Storage (chunkLength, opts) {
   var self = this
