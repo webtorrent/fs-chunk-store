@@ -1,12 +1,12 @@
 module.exports = Storage
 
 var fs = require('fs')
-var hat = require('hat')
 var mkdirp = require('mkdirp')
 var os = require('os')
 var parallel = require('run-parallel')
 var path = require('path')
 var raf = require('random-access-file')
+var randombytes = require('randombytes')
 var rimraf = require('rimraf')
 var thunky = require('thunky')
 
@@ -50,7 +50,7 @@ function Storage (chunkLength, opts) {
     var len = Number(opts.length) || Infinity
     self.files = [{
       offset: 0,
-      path: path.resolve(opts.path || path.join(TMP, 'fs-chunk-store', hat(128))),
+      path: path.resolve(opts.path || path.join(TMP, 'fs-chunk-store', randombytes(20).toString('hex'))),
       length: len
     }]
     self.length = len
