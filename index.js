@@ -14,7 +14,7 @@ var TMP
 try {
   TMP = fs.statSync('/tmp') && '/tmp'
 } catch (err) {
-  TMP = os.tmpDir()
+  TMP = os.tmpdir()
 }
 
 function Storage (chunkLength, opts) {
@@ -155,7 +155,7 @@ Storage.prototype.get = function (index, opts, cb) {
   }
 
   if (self.length === Infinity) {
-    if (rangeFrom === rangeTo) return nextTick(cb, null, new Buffer(0))
+    if (rangeFrom === rangeTo) return nextTick(cb, null, Buffer.from(0))
     self.files[0].open(function (err, file) {
       if (err) return cb(err)
       var offset = (index * self.chunkLength) + rangeFrom
@@ -172,7 +172,7 @@ Storage.prototype.get = function (index, opts, cb) {
         return nextTick(cb, new Error('no files matching the requested range'))
       }
     }
-    if (rangeFrom === rangeTo) return nextTick(cb, null, new Buffer(0))
+    if (rangeFrom === rangeTo) return nextTick(cb, null, Buffer.from(0))
 
     var tasks = targets.map(function (target) {
       return function (cb) {
