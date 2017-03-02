@@ -27,19 +27,19 @@ abstractTests(test, function (chunkLength) {
 
 test('length option', function (t) {
   var store = new FSChunkStore(10, { length: 20, path: TMP_FILE })
-  store.put(0, new Buffer('0123456789'), function (err) {
+  store.put(0, Buffer.from('0123456789'), function (err) {
     t.error(err)
-    t.deepEqual(fs.readFileSync(TMP_FILE).slice(0, 10), new Buffer('0123456789'))
-    store.put(1, new Buffer('1234567890'), function (err) {
+    t.deepEqual(fs.readFileSync(TMP_FILE).slice(0, 10), Buffer.from('0123456789'))
+    store.put(1, Buffer.from('1234567890'), function (err) {
       t.error(err)
-      t.deepEqual(fs.readFileSync(TMP_FILE), new Buffer('01234567891234567890'))
+      t.deepEqual(fs.readFileSync(TMP_FILE), Buffer.from('01234567891234567890'))
       store.get(0, function (err, chunk) {
         t.error(err)
-        t.deepEqual(chunk, new Buffer('0123456789'))
+        t.deepEqual(chunk, Buffer.from('0123456789'))
         store.get(1, function (err, chunk) {
           t.error(err)
-          t.deepEqual(chunk, new Buffer('1234567890'))
-          t.deepEqual(fs.readFileSync(TMP_FILE), new Buffer('01234567891234567890'))
+          t.deepEqual(chunk, Buffer.from('1234567890'))
+          t.deepEqual(fs.readFileSync(TMP_FILE), Buffer.from('01234567891234567890'))
           store.destroy(function (err) {
             t.error(err)
             t.throws(function () {
@@ -55,12 +55,12 @@ test('length option', function (t) {
 
 test('length option: less than chunk size', function (t) {
   var store = new FSChunkStore(10, { length: 7, path: TMP_FILE })
-  store.put(0, new Buffer('0123456'), function (err) {
+  store.put(0, Buffer.from('0123456'), function (err) {
     t.error(err)
-    t.deepEqual(fs.readFileSync(TMP_FILE), new Buffer('0123456'))
+    t.deepEqual(fs.readFileSync(TMP_FILE), Buffer.from('0123456'))
     store.get(0, function (err, chunk) {
       t.error(err)
-      t.deepEqual(chunk, new Buffer('0123456'))
+      t.deepEqual(chunk, Buffer.from('0123456'))
       store.destroy(function (err) {
         t.error(err)
         t.throws(function () {
@@ -74,7 +74,7 @@ test('length option: less than chunk size', function (t) {
 
 test('length option: less than chunk size, write too large', function (t) {
   var store = new FSChunkStore(10, { length: 7, path: TMP_FILE })
-  store.put(0, new Buffer('0123456789'), function (err) {
+  store.put(0, Buffer.from('0123456789'), function (err) {
     t.ok(err instanceof Error)
     store.destroy(function (err) {
       t.error(err)
@@ -88,9 +88,9 @@ test('length option: less than chunk size, write too large', function (t) {
 
 test('length option: less than chunk size, get `offset` too large', function (t) {
   var store = new FSChunkStore(10, { length: 7, path: TMP_FILE })
-  store.put(0, new Buffer('0123456'), function (err) {
+  store.put(0, Buffer.from('0123456'), function (err) {
     t.error(err)
-    t.deepEqual(fs.readFileSync(TMP_FILE), new Buffer('0123456'))
+    t.deepEqual(fs.readFileSync(TMP_FILE), Buffer.from('0123456'))
     store.get(0, { offset: 8 }, function (err, chunk) {
       t.ok(err instanceof Error)
       store.destroy(function (err) {
@@ -106,9 +106,9 @@ test('length option: less than chunk size, get `offset` too large', function (t)
 
 test('length option: less than chunk size, get `length` too large', function (t) {
   var store = new FSChunkStore(10, { length: 7, path: TMP_FILE })
-  store.put(0, new Buffer('0123456'), function (err) {
+  store.put(0, Buffer.from('0123456'), function (err) {
     t.error(err)
-    t.deepEqual(fs.readFileSync(TMP_FILE), new Buffer('0123456'))
+    t.deepEqual(fs.readFileSync(TMP_FILE), Buffer.from('0123456'))
     store.get(0, { length: 8 }, function (err, chunk) {
       t.ok(err instanceof Error)
       store.destroy(function (err) {
@@ -124,9 +124,9 @@ test('length option: less than chunk size, get `length` too large', function (t)
 
 test('length option: less than chunk size, get `offset + length` too large', function (t) {
   var store = new FSChunkStore(10, { length: 7, path: TMP_FILE })
-  store.put(0, new Buffer('0123456'), function (err) {
+  store.put(0, Buffer.from('0123456'), function (err) {
     t.error(err)
-    t.deepEqual(fs.readFileSync(TMP_FILE), new Buffer('0123456'))
+    t.deepEqual(fs.readFileSync(TMP_FILE), Buffer.from('0123456'))
     store.get(0, { offset: 4, length: 4 }, function (err, chunk) {
       t.ok(err instanceof Error)
       store.destroy(function (err) {
@@ -149,25 +149,25 @@ test('multiple files', function (t) {
       { path: 'tmp2/file4', length: 8 }
     ]
   })
-  store.put(0, new Buffer('0123456789'), function (err) {
+  store.put(0, Buffer.from('0123456789'), function (err) {
     t.error(err)
-    t.deepEqual(fs.readFileSync('tmp/file1'), new Buffer('01234'))
-    t.deepEqual(fs.readFileSync('tmp/file2'), new Buffer('56789'))
+    t.deepEqual(fs.readFileSync('tmp/file1'), Buffer.from('01234'))
+    t.deepEqual(fs.readFileSync('tmp/file2'), Buffer.from('56789'))
     store.get(0, function (err, chunk) {
       t.error(err)
-      t.deepEqual(chunk, new Buffer('0123456789'))
-      store.put(1, new Buffer('abcdefghij'), function (err) {
+      t.deepEqual(chunk, Buffer.from('0123456789'))
+      store.put(1, Buffer.from('abcdefghij'), function (err) {
         t.error(err)
-        t.deepEqual(fs.readFileSync('tmp2/file3'), new Buffer('abcdefgh'))
+        t.deepEqual(fs.readFileSync('tmp2/file3'), Buffer.from('abcdefgh'))
         store.get(1, function (err, chunk) {
           t.error(err)
-          t.deepEqual(chunk, new Buffer('abcdefghij'))
-          store.put(2, new Buffer('klmnop'), function (err) {
+          t.deepEqual(chunk, Buffer.from('abcdefghij'))
+          store.put(2, Buffer.from('klmnop'), function (err) {
             t.error(err)
-            t.deepEqual(fs.readFileSync('tmp2/file4'), new Buffer('ijklmnop'))
+            t.deepEqual(fs.readFileSync('tmp2/file4'), Buffer.from('ijklmnop'))
             store.get(2, function (err, chunk) {
               t.error(err)
-              t.deepEqual(chunk, new Buffer('klmnop'))
+              t.deepEqual(chunk, Buffer.from('klmnop'))
               store.destroy(function (err) {
                 t.error(err)
                 t.throws(function () {

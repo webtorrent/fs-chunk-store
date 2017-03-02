@@ -47,7 +47,7 @@ var chunks = new FSChunkStore(10, {
 ### put, get, close, destroy
 
 ```js
-chunks.put(0, new Buffer('0123456789'), function (err) {
+chunks.put(0, Buffer.from('0123456789'), function (err) {
   if (err) throw err
 
   chunks.get(0, function (err, chunk) {
