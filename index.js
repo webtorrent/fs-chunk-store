@@ -1,7 +1,6 @@
 module.exports = Storage
 
 var fs = require('fs')
-var mkdirp = require('mkdirp')
 var os = require('os')
 var parallel = require('run-parallel')
 var path = require('path')
@@ -62,7 +61,7 @@ function Storage (chunkLength, opts) {
   self.files.forEach(function (file) {
     file.open = thunky(function (cb) {
       if (self.closed) return cb(new Error('Storage is closed'))
-      mkdirp(path.dirname(file.path), function (err) {
+      fs.mkdir(path.dirname(file.path), { recursive: true }, function (err) {
         if (err) return cb(err)
         if (self.closed) return cb(new Error('Storage is closed'))
         cb(null, raf(file.path))
