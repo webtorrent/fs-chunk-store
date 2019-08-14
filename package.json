@@ -13,7 +13,7 @@
   "dependencies": {
     "random-access-file": "^2.0.1",
     "randombytes": "^2.0.3",
-    "rimraf": "^2.4.2",
+    "rimraf": "^3.0.0",
     "run-parallel": "^1.1.2",
     "thunky": "^1.0.1"
   },
