@@ -94,10 +94,10 @@ function Storage (chunkLength, opts) {
         if (!self.chunkMap[p]) self.chunkMap[p] = []
 
         self.chunkMap[p].push({
-          from: from,
-          to: to,
-          offset: offset,
-          file: file
+          from,
+          to,
+          offset,
+          file
         })
       }
     })
