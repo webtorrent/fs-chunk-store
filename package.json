@@ -20,7 +20,7 @@
   "devDependencies": {
     "abstract-chunk-store": "^1.0.0",
     "standard": "*",
-    "tape": "^4.1.0"
+    "tape": "^5.0.0"
   },
   "homepage": "https://github.com/feross/fs-chunk-store",
   "keywords": [
