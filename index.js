@@ -1,3 +1,4 @@
+/*! fs-chunk-store. MIT License. Feross Aboukhadijeh <https://feross.org/opensource> */
 module.exports = Storage
 
 var fs = require('fs')
