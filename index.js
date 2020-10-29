@@ -1,16 +1,16 @@
 /*! fs-chunk-store. MIT License. Feross Aboukhadijeh <https://feross.org/opensource> */
 module.exports = Storage
 
-var fs = require('fs')
-var os = require('os')
-var parallel = require('run-parallel')
-var path = require('path')
-var raf = require('random-access-file')
-var randombytes = require('randombytes')
-var rimraf = require('rimraf')
-var thunky = require('thunky')
+const fs = require('fs')
+const os = require('os')
+const parallel = require('run-parallel')
+const path = require('path')
+const raf = require('random-access-file')
+const randombytes = require('randombytes')
+const rimraf = require('rimraf')
+const thunky = require('thunky')
 
-var TMP
+let TMP
 try {
   TMP = fs.statSync('/tmp') && '/tmp'
 } catch (err) {
@@ -18,7 +18,7 @@ try {
 }
 
 function Storage (chunkLength, opts) {
-  var self = this
+  const self = this
   if (!(self instanceof Storage)) return new Storage(chunkLength, opts)
   if (!opts) opts = {}
 
@@ -36,7 +36,7 @@ function Storage (chunkLength, opts) {
         if (i === 0) {
           file.offset = 0
         } else {
-          var prevFile = files[i - 1]
+          const prevFile = files[i - 1]
           file.offset = prevFile.offset + prevFile.length
         }
       }
@@ -47,7 +47,7 @@ function Storage (chunkLength, opts) {
       throw new Error('total `files` length is not equal to explicit `length` option')
     }
   } else {
-    var len = Number(opts.length) || Infinity
+    const len = Number(opts.length) || Infinity
     self.files = [{
       offset: 0,
       path: path.resolve(opts.path || path.join(TMP, 'fs-chunk-store', randombytes(20).toString('hex'))),
@@ -78,19 +78,19 @@ function Storage (chunkLength, opts) {
     self.lastChunkIndex = Math.ceil(self.length / self.chunkLength) - 1
 
     self.files.forEach(function (file) {
-      var fileStart = file.offset
-      var fileEnd = file.offset + file.length
+      const fileStart = file.offset
+      const fileEnd = file.offset + file.length
 
-      var firstChunk = Math.floor(fileStart / self.chunkLength)
-      var lastChunk = Math.floor((fileEnd - 1) / self.chunkLength)
+      const firstChunk = Math.floor(fileStart / self.chunkLength)
+      const lastChunk = Math.floor((fileEnd - 1) / self.chunkLength)
 
-      for (var p = firstChunk; p <= lastChunk; ++p) {
-        var chunkStart = p * self.chunkLength
-        var chunkEnd = chunkStart + self.chunkLength
+      for (let p = firstChunk; p <= lastChunk; ++p) {
+        const chunkStart = p * self.chunkLength
+        const chunkEnd = chunkStart + self.chunkLength
 
-        var from = (fileStart < chunkStart) ? 0 : fileStart - chunkStart
-        var to = (fileEnd > chunkEnd) ? self.chunkLength : fileEnd - chunkStart
-        var offset = (fileStart > chunkStart) ? 0 : chunkStart - fileStart
+        const from = (fileStart < chunkStart) ? 0 : fileStart - chunkStart
+        const to = (fileEnd > chunkEnd) ? self.chunkLength : fileEnd - chunkStart
+        const offset = (fileStart > chunkStart) ? 0 : chunkStart - fileStart
 
         if (!self.chunkMap[p]) self.chunkMap[p] = []
 
@@ -106,11 +106,11 @@ function Storage (chunkLength, opts) {
 }
 
 Storage.prototype.put = function (index, buf, cb) {
-  var self = this
+  const self = this
   if (typeof cb !== 'function') cb = noop
   if (self.closed) return nextTick(cb, new Error('Storage is closed'))
 
-  var isLastChunk = (index === self.lastChunkIndex)
+  const isLastChunk = (index === self.lastChunkIndex)
   if (isLastChunk && buf.length !== self.lastChunkLength) {
     return nextTick(cb, new Error('Last chunk length must be ' + self.lastChunkLength))
   }
@@ -124,9 +124,9 @@ Storage.prototype.put = function (index, buf, cb) {
       file.write(index * self.chunkLength, buf, cb)
     })
   } else {
-    var targets = self.chunkMap[index]
+    const targets = self.chunkMap[index]
     if (!targets) return nextTick(cb, new Error('no files matching the request range'))
-    var tasks = targets.map(function (target) {
+    const tasks = targets.map(function (target) {
       return function (cb) {
         target.file.open(function (err, file) {
           if (err) return cb(err)
@@ -139,16 +139,16 @@ Storage.prototype.put = function (index, buf, cb) {
 }
 
 Storage.prototype.get = function (index, opts, cb) {
-  var self = this
+  const self = this
   if (typeof opts === 'function') return self.get(index, null, opts)
   if (self.closed) return nextTick(cb, new Error('Storage is closed'))
 
-  var chunkLength = (index === self.lastChunkIndex)
+  const chunkLength = (index === self.lastChunkIndex)
     ? self.lastChunkLength
     : self.chunkLength
 
-  var rangeFrom = (opts && opts.offset) || 0
-  var rangeTo = (opts && opts.length) ? rangeFrom + opts.length : chunkLength
+  const rangeFrom = (opts && opts.offset) || 0
+  const rangeTo = (opts && opts.length) ? rangeFrom + opts.length : chunkLength
 
   if (rangeFrom < 0 || rangeFrom < 0 || rangeTo > chunkLength) {
     return nextTick(cb, new Error('Invalid offset and/or length'))
@@ -158,11 +158,11 @@ Storage.prototype.get = function (index, opts, cb) {
     if (rangeFrom === rangeTo) return nextTick(cb, null, Buffer.from(0))
     self.files[0].open(function (err, file) {
       if (err) return cb(err)
-      var offset = (index * self.chunkLength) + rangeFrom
+      const offset = (index * self.chunkLength) + rangeFrom
       file.read(offset, rangeTo - rangeFrom, cb)
     })
   } else {
-    var targets = self.chunkMap[index]
+    let targets = self.chunkMap[index]
     if (!targets) return nextTick(cb, new Error('no files matching the request range'))
     if (opts) {
       targets = targets.filter(function (target) {
@@ -174,11 +174,11 @@ Storage.prototype.get = function (index, opts, cb) {
     }
     if (rangeFrom === rangeTo) return nextTick(cb, null, Buffer.from(0))
 
-    var tasks = targets.map(function (target) {
+    const tasks = targets.map(function (target) {
       return function (cb) {
-        var from = target.from
-        var to = target.to
-        var offset = target.offset
+        let from = target.from
+        let to = target.to
+        let offset = target.offset
 
         if (opts) {
           if (to > rangeTo) to = rangeTo
@@ -203,11 +203,11 @@ Storage.prototype.get = function (index, opts, cb) {
 }
 
 Storage.prototype.close = function (cb) {
-  var self = this
+  const self = this
   if (self.closed) return nextTick(cb, new Error('Storage is closed'))
   self.closed = true
 
-  var tasks = self.files.map(function (file) {
+  const tasks = self.files.map(function (file) {
     return function (cb) {
       file.open(function (err, file) {
         // an open error is okay because that means the file is not open
@@ -220,9 +220,9 @@ Storage.prototype.close = function (cb) {
 }
 
 Storage.prototype.destroy = function (cb) {
-  var self = this
+  const self = this
   self.close(function () {
-    var tasks = self.files.map(function (file) {
+    const tasks = self.files.map(function (file) {
       return function (cb) {
         rimraf(file.path, { maxBusyTries: 10 }, cb)
       }

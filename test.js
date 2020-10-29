@@ -1,9 +1,9 @@
-var abstractTests = require('abstract-chunk-store/tests')
-var fs = require('fs')
-var FSChunkStore = require('./')
-var test = require('tape')
+const abstractTests = require('abstract-chunk-store/tests')
+const fs = require('fs')
+const FSChunkStore = require('./')
+const test = require('tape')
 
-var TMP_FILE = 'tmp/test_file'
+const TMP_FILE = 'tmp/test_file'
 
 // Run abstract tests with single backing file
 abstractTests(test, function (chunkLength) {
@@ -26,7 +26,7 @@ abstractTests(test, function (chunkLength) {
 })
 
 test('length option', function (t) {
-  var store = new FSChunkStore(10, { length: 20, path: TMP_FILE })
+  const store = new FSChunkStore(10, { length: 20, path: TMP_FILE })
   store.put(0, Buffer.from('0123456789'), function (err) {
     t.error(err)
     t.deepEqual(fs.readFileSync(TMP_FILE).slice(0, 10), Buffer.from('0123456789'))
@@ -54,7 +54,7 @@ test('length option', function (t) {
 })
 
 test('length option: less than chunk size', function (t) {
-  var store = new FSChunkStore(10, { length: 7, path: TMP_FILE })
+  const store = new FSChunkStore(10, { length: 7, path: TMP_FILE })
   store.put(0, Buffer.from('0123456'), function (err) {
     t.error(err)
     t.deepEqual(fs.readFileSync(TMP_FILE), Buffer.from('0123456'))
@@ -73,7 +73,7 @@ test('length option: less than chunk size', function (t) {
 })
 
 test('length option: less than chunk size, write too large', function (t) {
-  var store = new FSChunkStore(10, { length: 7, path: TMP_FILE })
+  const store = new FSChunkStore(10, { length: 7, path: TMP_FILE })
   store.put(0, Buffer.from('0123456789'), function (err) {
     t.ok(err instanceof Error)
     store.destroy(function (err) {
@@ -87,7 +87,7 @@ test('length option: less than chunk size, write too large', function (t) {
 })
 
 test('length option: less than chunk size, get `offset` too large', function (t) {
-  var store = new FSChunkStore(10, { length: 7, path: TMP_FILE })
+  const store = new FSChunkStore(10, { length: 7, path: TMP_FILE })
   store.put(0, Buffer.from('0123456'), function (err) {
     t.error(err)
     t.deepEqual(fs.readFileSync(TMP_FILE), Buffer.from('0123456'))
@@ -105,7 +105,7 @@ test('length option: less than chunk size, get `offset` too large', function (t)
 })
 
 test('length option: less than chunk size, get `length` too large', function (t) {
-  var store = new FSChunkStore(10, { length: 7, path: TMP_FILE })
+  const store = new FSChunkStore(10, { length: 7, path: TMP_FILE })
   store.put(0, Buffer.from('0123456'), function (err) {
     t.error(err)
     t.deepEqual(fs.readFileSync(TMP_FILE), Buffer.from('0123456'))
@@ -123,7 +123,7 @@ test('length option: less than chunk size, get `length` too large', function (t)
 })
 
 test('length option: less than chunk size, get `offset + length` too large', function (t) {
-  var store = new FSChunkStore(10, { length: 7, path: TMP_FILE })
+  const store = new FSChunkStore(10, { length: 7, path: TMP_FILE })
   store.put(0, Buffer.from('0123456'), function (err) {
     t.error(err)
     t.deepEqual(fs.readFileSync(TMP_FILE), Buffer.from('0123456'))
@@ -141,7 +141,7 @@ test('length option: less than chunk size, get `offset + length` too large', fun
 })
 
 test('multiple files', function (t) {
-  var store = new FSChunkStore(10, {
+  const store = new FSChunkStore(10, {
     files: [
       { path: 'tmp/file1', length: 5 },
       { path: 'tmp/file2', length: 5 },
