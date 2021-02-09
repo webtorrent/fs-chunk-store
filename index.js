@@ -5,6 +5,7 @@ const fs = require('fs')
 const os = require('os')
 const parallel = require('run-parallel')
 const path = require('path')
+const queueMicrotask = require('queue-microtask')
 const raf = require('random-access-file')
 const randombytes = require('randombytes')
 const rimraf = require('rimraf')
@@ -232,7 +233,7 @@ Storage.prototype.destroy = function (cb) {
 }
 
 function nextTick (cb, err, val) {
-  process.nextTick(function () {
+  queueMicrotask(function () {
     if (cb) cb(err, val)
   })
 }
