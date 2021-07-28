@@ -25,6 +25,7 @@ function Storage (chunkLength, opts) {
   self.chunkLength = Number(chunkLength)
   if (!self.chunkLength) throw new Error('First argument must be a chunk length')
   self.name = opts.name || path.join('fs-chunk-store', randombytes(20).toString('hex'))
+  self.addUID = opts.addUID
 
   if (opts.files) {
     self.path = opts.path
@@ -42,7 +43,9 @@ function Storage (chunkLength, opts) {
           file.offset = prevFile.offset + prevFile.length
         }
       }
-      if (self.path) file.path = path.resolve(path.join(self.path, file.path))
+      if (self.path) {
+        file.path = self.addUID ? path.resolve(path.join(self.path, self.name, file.path)) : path.resolve(path.join(self.path, file.path))
+      }
       return file
     })
     self.length = self.files.reduce(function (sum, file) { return sum + file.length }, 0)
@@ -225,7 +228,7 @@ Storage.prototype.close = function (cb) {
 Storage.prototype.destroy = function (cb) {
   const self = this
   self.close(function () {
-    if (self.path) {
+    if (self.addUID && self.path) {
       fs.rm(path.resolve(self.path), { recursive: true, maxRetries: 10 }, function (err) {
         err && err.code === 'ENOENT' ? cb() : cb(err)
       })
