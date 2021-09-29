@@ -19,7 +19,9 @@
     "thunky": "^1.0.1"
   },
   "devDependencies": {
+    "@webtorrent/semantic-release-config": "^1.0.7",
     "abstract-chunk-store": "^1.0.0",
+    "semantic-release": "^17.4.7",
     "standard": "*",
     "tape": "^5.0.0"
   },
@@ -53,5 +55,8 @@
       "type": "consulting",
       "url": "https://feross.org/support"
     }
-  ]
+  ],
+  "release": {
+    "extends": "@webtorrent/semantic-release-config"
+  }
 }
