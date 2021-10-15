@@ -182,3 +182,63 @@ test('multiple files', function (t) {
     })
   })
 })
+
+test('relative path', function (t) {
+  const store = new FSChunkStore(10, {
+    files: [
+      { path: 'file1', length: 5 },
+      { path: 'file2', length: 5 }
+    ],
+    path: 'tmp'
+  })
+  store.put(0, Buffer.from('0123456789'), function (err) {
+    t.error(err)
+    t.deepEqual(fs.readFileSync('tmp/file1'), Buffer.from('01234'))
+    t.deepEqual(fs.readFileSync('tmp/file2'), Buffer.from('56789'))
+    store.destroy(function (err) {
+      t.error(err)
+      t.end()
+    })
+  })
+})
+
+test('relative path with name', function (t) {
+  const store = new FSChunkStore(10, {
+    files: [
+      { path: 'file1', length: 5 },
+      { path: 'file2', length: 5 }
+    ],
+    name: 'folder',
+    path: 'tmp'
+  })
+  store.put(0, Buffer.from('0123456789'), function (err) {
+    t.error(err)
+    t.deepEqual(fs.readFileSync('tmp/file1'), Buffer.from('01234'))
+    t.deepEqual(fs.readFileSync('tmp/file2'), Buffer.from('56789'))
+    store.destroy(function (err) {
+      t.error(err)
+      t.end()
+    })
+  })
+})
+
+test('UID on relative path', function (t) {
+  const store = new FSChunkStore(10, {
+    files: [
+      { path: 'file1', length: 5 },
+      { path: 'file2', length: 5 }
+    ],
+    addUID: true,
+    name: 'folder',
+    path: 'tmp'
+  })
+  store.put(0, Buffer.from('0123456789'), function (err) {
+    t.error(err)
+    t.deepEqual(fs.readFileSync('tmp/folder/file1'), Buffer.from('01234'))
+    t.deepEqual(fs.readFileSync('tmp/folder/file2'), Buffer.from('56789'))
+    store.destroy(function (err) {
+      t.error(err)
+      t.end()
+    })
+  })
+})
