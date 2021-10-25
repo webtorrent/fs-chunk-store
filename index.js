@@ -25,8 +25,11 @@ function Storage (chunkLength, opts) {
 
   self.chunkLength = Number(chunkLength)
   if (!self.chunkLength) throw new Error('First argument must be a chunk length')
+  self.name = opts.name || path.join('fs-chunk-store', randombytes(20).toString('hex'))
+  self.addUID = opts.addUID
 
   if (opts.files) {
+    self.path = opts.path
     if (!Array.isArray(opts.files)) {
       throw new Error('`files` option must be an array')
     }
@@ -41,6 +44,9 @@ function Storage (chunkLength, opts) {
           file.offset = prevFile.offset + prevFile.length
         }
       }
+      if (self.path) {
+        file.path = self.addUID ? path.resolve(path.join(self.path, self.name, file.path)) : path.resolve(path.join(self.path, file.path))
+      }
       return file
     })
     self.length = self.files.reduce(function (sum, file) { return sum + file.length }, 0)
@@ -51,7 +57,7 @@ function Storage (chunkLength, opts) {
     const len = Number(opts.length) || Infinity
     self.files = [{
       offset: 0,
-      path: path.resolve(opts.path || path.join(TMP, 'fs-chunk-store', randombytes(20).toString('hex'))),
+      path: path.resolve(opts.path || path.join(TMP, self.name)),
       length: len
     }]
     self.length = len
@@ -223,12 +229,16 @@ Storage.prototype.close = function (cb) {
 Storage.prototype.destroy = function (cb) {
   const self = this
   self.close(function () {
-    const tasks = self.files.map(function (file) {
-      return function (cb) {
-        rimraf(file.path, { maxBusyTries: 10 }, cb)
-      }
-    })
-    parallel(tasks, cb)
+    if (self.addUID && self.path) {
+      rimraf(path.resolve(path.join(self.path, self.name)), { maxBusyTries: 10 }, cb)
+    } else {
+      const tasks = self.files.map(function (file) {
+        return function (cb) {
+          rimraf(file.path, { maxBusyTries: 10 }, cb)
+        }
+      })
+      parallel(tasks, cb)
+    }
   })
 }
 
