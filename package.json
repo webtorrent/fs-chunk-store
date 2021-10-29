@@ -1,7 +1,7 @@
 {
   "name": "fs-chunk-store",
   "description": "Filesystem (fs) chunk store that is abstract-chunk-store compliant",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "author": {
     "name": "Feross Aboukhadijeh",
     "email": "feross@feross.org",
@@ -18,9 +18,11 @@
     "thunky": "^1.0.1"
   },
   "devDependencies": {
-    "abstract-chunk-store": "^1.0.0",
+    "@webtorrent/semantic-release-config": "1.0.7",
+    "abstract-chunk-store": "1.5.0",
+    "semantic-release": "18.0.0",
     "standard": "*",
-    "tape": "^5.0.0"
+    "tape": "5.3.1"
   },
   "homepage": "https://github.com/feross/fs-chunk-store",
   "keywords": [
@@ -52,5 +54,13 @@
       "type": "consulting",
       "url": "https://feross.org/support"
     }
-  ]
+  ],
+  "renovate": {
+    "extends": [
+      "github>webtorrent/renovate-config"
+    ]
+  },
+  "release": {
+    "extends": "@webtorrent/semantic-release-config"
+  }
 }
