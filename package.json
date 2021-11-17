@@ -23,7 +23,7 @@
     "abstract-chunk-store": "1.5.0",
     "semantic-release": "18.0.0",
     "standard": "*",
-    "tape": "5.3.1"
+    "tape": "5.3.2"
   },
   "homepage": "https://github.com/feross/fs-chunk-store",
   "keywords": [
