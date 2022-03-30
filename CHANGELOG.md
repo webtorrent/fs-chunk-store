@@ -1,3 +1,21 @@
+# [3.0.0](https://github.com/webtorrent/fs-chunk-store/compare/v2.0.5...v3.0.0) (2022-03-30)
+
+
+### Bug Fixes
+
+* remove rimraf ([#16](https://github.com/webtorrent/fs-chunk-store/issues/16)) ([874205b](https://github.com/webtorrent/fs-chunk-store/commit/874205bba91e3a6d55be927fa4dd1b79425e0e58))
+
+
+### BREAKING CHANGES
+
+* requires node 14+
+
+* remove rimraf
+
+* fix: no package lock
+
+Co-authored-by: Diego Rodríguez Baquero <github@diegorbaquero.com>
+
 ## [2.0.5](https://github.com/webtorrent/fs-chunk-store/compare/v2.0.4...v2.0.5) (2022-03-30)
 
 

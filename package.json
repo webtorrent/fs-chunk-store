@@ -1,7 +1,7 @@
 {
   "name": "fs-chunk-store",
   "description": "Filesystem (fs) chunk store that is abstract-chunk-store compliant",
-  "version": "2.0.5",
+  "version": "3.0.0",
   "author": {
     "name": "Feross Aboukhadijeh",
     "email": "feross@feross.org",
