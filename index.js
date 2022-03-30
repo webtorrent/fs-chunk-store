@@ -8,7 +8,6 @@ const path = require('path')
 const queueMicrotask = require('queue-microtask')
 const raf = require('random-access-file')
 const randombytes = require('randombytes')
-const rimraf = require('rimraf')
 const thunky = require('thunky')
 
 let TMP
@@ -230,11 +229,13 @@ Storage.prototype.destroy = function (cb) {
   const self = this
   self.close(function () {
     if (self.addUID && self.path) {
-      rimraf(path.resolve(path.join(self.path, self.name)), { maxBusyTries: 10 }, cb)
+      fs.rm(path.resolve(path.join(self.path, self.name)), { recursive: true, maxBusyTries: 10 }, cb)
     } else {
       const tasks = self.files.map(function (file) {
         return function (cb) {
-          rimraf(file.path, { maxBusyTries: 10 }, cb)
+          fs.rm(file.path, { recursive: true, maxRetries: 10 }, err => {
+            err && err.code === 'ENOENT' ? cb() : cb(err)
+          })
         }
       })
       parallel(tasks, cb)
