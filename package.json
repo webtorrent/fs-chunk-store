@@ -22,7 +22,7 @@
     "abstract-chunk-store": "1.5.0",
     "semantic-release": "19.0.2",
     "standard": "*",
-    "tape": "5.5.2"
+    "tape": "5.5.3"
   },
   "homepage": "https://github.com/webtorrent/fs-chunk-store",
   "keywords": [
