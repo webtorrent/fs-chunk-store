@@ -1,3 +1,10 @@
+## [3.0.1](https://github.com/webtorrent/fs-chunk-store/compare/v3.0.0...v3.0.1) (2022-07-03)
+
+
+### Bug Fixes
+
+* don't mutate original path ([#37](https://github.com/webtorrent/fs-chunk-store/issues/37)) ([726cbb5](https://github.com/webtorrent/fs-chunk-store/commit/726cbb5bbd0f3e60c6c2f3f8e3b100d20727f815))
+
 # [3.0.0](https://github.com/webtorrent/fs-chunk-store/compare/v2.0.5...v3.0.0) (2022-03-30)
 
 
