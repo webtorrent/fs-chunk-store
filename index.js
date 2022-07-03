@@ -32,7 +32,7 @@ function Storage (chunkLength, opts) {
     if (!Array.isArray(opts.files)) {
       throw new Error('`files` option must be an array')
     }
-    self.files = opts.files.slice(0).map(function (file, i, files) {
+    self.files = opts.files.map(function (file, i, files) {
       if (file.path == null) throw new Error('File is missing `path` property')
       if (file.length == null) throw new Error('File is missing `length` property')
       if (file.offset == null) {
@@ -43,10 +43,11 @@ function Storage (chunkLength, opts) {
           file.offset = prevFile.offset + prevFile.length
         }
       }
+      let newPath = file.path
       if (self.path) {
-        file.path = self.addUID ? path.resolve(path.join(self.path, self.name, file.path)) : path.resolve(path.join(self.path, file.path))
+        newPath = self.addUID ? path.resolve(path.join(self.path, self.name, file.path)) : path.resolve(path.join(self.path, file.path))
       }
-      return file
+      return { path: newPath, length: file.length, offset: file.offset }
     })
     self.length = self.files.reduce(function (sum, file) { return sum + file.length }, 0)
     if (opts.length != null && opts.length !== self.length) {
