@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "queue-microtask": "^1.2.2",
-    "random-access-file": "^2.0.1",
+    "random-access-file": "^3.0.0",
     "randombytes": "^2.0.3",
     "run-parallel": "^1.1.2",
     "thunky": "^1.0.1"
