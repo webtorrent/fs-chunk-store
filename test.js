@@ -1,7 +1,7 @@
-const abstractTests = require('abstract-chunk-store/tests')
-const fs = require('fs')
-const FSChunkStore = require('./')
-const test = require('tape')
+import abstractTests from 'abstract-chunk-store/tests/index.js'
+import fs from 'fs'
+import FSChunkStore from './index.js'
+import test from 'tape'
 
 const TMP_FILE = 'tmp/test_file'
 
