@@ -1,3 +1,19 @@
+# [4.0.0](https://github.com/webtorrent/fs-chunk-store/compare/v3.0.1...v4.0.0) (2022-11-19)
+
+
+### Features
+
+* esm, modernize ([#44](https://github.com/webtorrent/fs-chunk-store/issues/44)) ([b8f5bde](https://github.com/webtorrent/fs-chunk-store/commit/b8f5bde34c4ce777aadd798afee47cab44ea06a4))
+
+
+### BREAKING CHANGES
+
+* ESM only
+
+* fix: don't mutate original path
+
+* feat: esm, modernize
+
 ## [3.0.1](https://github.com/webtorrent/fs-chunk-store/compare/v3.0.0...v3.0.1) (2022-07-03)
 
 
