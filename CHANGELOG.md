@@ -1,3 +1,10 @@
+## [4.0.1](https://github.com/webtorrent/fs-chunk-store/compare/v4.0.0...v4.0.1) (2023-01-27)
+
+
+### Bug Fixes
+
+* **deps:** update dependency random-access-file to v4 ([#41](https://github.com/webtorrent/fs-chunk-store/issues/41)) ([33e47bd](https://github.com/webtorrent/fs-chunk-store/commit/33e47bdf92a82b765550759c3b6637313540c5b3)), closes [#47](https://github.com/webtorrent/fs-chunk-store/issues/47)
+
 # [4.0.0](https://github.com/webtorrent/fs-chunk-store/compare/v3.0.1...v4.0.0) (2022-11-19)
 
 
