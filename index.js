@@ -4,7 +4,7 @@ import os from 'os'
 import parallel from 'run-parallel'
 import path from 'path'
 import queueMicrotask from 'queue-microtask'
-import raf from 'random-access-file'
+import RAF from 'random-access-file'
 import randombytes from 'randombytes'
 import thunky from 'thunky'
 
@@ -67,7 +67,7 @@ export default class Storage {
         fs.mkdir(path.dirname(file.path), { recursive: true }, err => {
           if (err) return cb(err)
           if (this.closed) return cb(new Error('Storage is closed'))
-          cb(null, raf(file.path))
+          cb(null, new RAF(file.path))
         })
       })
     })
