@@ -1,3 +1,10 @@
+# [4.1.0](https://github.com/webtorrent/fs-chunk-store/compare/v4.0.1...v4.1.0) (2023-06-15)
+
+
+### Features
+
+* sanitise filename ([#49](https://github.com/webtorrent/fs-chunk-store/issues/49)) ([8a8045c](https://github.com/webtorrent/fs-chunk-store/commit/8a8045c472df67c30e442fb6dc2faf03aead8f2f))
+
 ## [4.0.1](https://github.com/webtorrent/fs-chunk-store/compare/v4.0.0...v4.0.1) (2023-01-27)
 
 
