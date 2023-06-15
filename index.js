@@ -7,6 +7,9 @@ import queueMicrotask from 'queue-microtask'
 import RAF from 'random-access-file'
 import randombytes from 'randombytes'
 import thunky from 'thunky'
+import getFileRegex from 'filename-reserved-regex'
+
+const RESERVED_FILENAME_REGEX = getFileRegex()
 
 let TMP
 try {
@@ -38,10 +41,12 @@ export default class Storage {
             file.offset = prevFile.offset + prevFile.length
           }
         }
-        let newPath = file.path
+        let newPath = path.dirname(file.path)
+        const filename = path.basename(file.path)
         if (this.path) {
-          newPath = this.addUID ? path.resolve(path.join(this.path, this.name, file.path)) : path.resolve(path.join(this.path, file.path))
+          newPath = this.addUID ? path.resolve(path.join(this.path, this.name, newPath)) : path.resolve(path.join(this.path, newPath))
         }
+        newPath = path.join(newPath, filename.replace(RESERVED_FILENAME_REGEX, ''))
         return { path: newPath, length: file.length, offset: file.offset }
       })
       this.length = this.files.reduce((sum, file) => { return sum + file.length }, 0)

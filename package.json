@@ -12,6 +12,7 @@
   },
   "type": "module",
   "dependencies": {
+    "filename-reserved-regex": "^3.0.0",
     "queue-microtask": "^1.2.2",
     "random-access-file": "^4.0.0",
     "randombytes": "^2.0.3",
