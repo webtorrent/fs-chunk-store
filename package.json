@@ -15,13 +15,12 @@
     "filename-reserved-regex": "^3.0.0",
     "queue-microtask": "^1.2.2",
     "random-access-file": "^4.0.0",
-    "randombytes": "^2.0.3",
     "run-parallel": "^1.1.2",
-    "thunky": "^1.0.1"
+    "thunky": "^1.0.1",
+    "uint8-util": "^2.2.5"
   },
   "devDependencies": {
     "@webtorrent/semantic-release-config": "1.0.10",
-    "abstract-chunk-store": "1.5.0",
     "semantic-release": "21.1.2",
     "standard": "*",
     "tape": "5.9.0"
