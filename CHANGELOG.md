@@ -1,3 +1,13 @@
+# [5.0.0](https://github.com/webtorrent/fs-chunk-store/compare/v4.1.0...v5.0.0) (2025-08-03)
+
+
+* BREAKING CHANGE: drop buffer ([51e0263](https://github.com/webtorrent/fs-chunk-store/commit/51e02638868854f3c4e6f8fcbdac1fba3e2311a7))
+
+
+### BREAKING CHANGES
+
+* drop buffer
+
 # [4.1.0](https://github.com/webtorrent/fs-chunk-store/compare/v4.0.1...v4.1.0) (2023-06-15)
 
 
