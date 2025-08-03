@@ -1,11 +1,11 @@
 /*! fs-chunk-store. MIT License. Feross Aboukhadijeh <https://feross.org/opensource> */
-import fs from 'fs'
+import { statSync, mkdir, rm } from 'fs'
 import os from 'os'
 import parallel from 'run-parallel'
-import path from 'path'
+import { resolve, join, dirname, basename } from 'path'
 import queueMicrotask from 'queue-microtask'
 import RAF from 'random-access-file'
-import randombytes from 'randombytes'
+import { concat, randomBytes, arr2hex } from 'uint8-util'
 import thunky from 'thunky'
 import getFileRegex from 'filename-reserved-regex'
 
@@ -13,7 +13,7 @@ const RESERVED_FILENAME_REGEX = getFileRegex()
 
 let TMP
 try {
-  TMP = fs.statSync('/tmp') && '/tmp'
+  TMP = statSync('/tmp') && '/tmp'
 } catch (err) {
   TMP = os.tmpdir()
 }
@@ -22,7 +22,7 @@ export default class Storage {
   constructor (chunkLength, opts = {}) {
     this.chunkLength = Number(chunkLength)
     if (!this.chunkLength) throw new Error('First argument must be a chunk length')
-    this.name = opts.name || path.join('fs-chunk-store', randombytes(20).toString('hex'))
+    this.name = opts.name || join('fs-chunk-store', arr2hex(randomBytes(20)))
     this.addUID = opts.addUID
 
     if (opts.files) {
@@ -41,12 +41,12 @@ export default class Storage {
             file.offset = prevFile.offset + prevFile.length
           }
         }
-        let newPath = path.dirname(file.path)
-        const filename = path.basename(file.path)
+        let newPath = dirname(file.path)
+        const filename = basename(file.path)
         if (this.path) {
-          newPath = this.addUID ? path.resolve(path.join(this.path, this.name, newPath)) : path.resolve(path.join(this.path, newPath))
+          newPath = this.addUID ? resolve(join(this.path, this.name, newPath)) : resolve(join(this.path, newPath))
         }
-        newPath = path.join(newPath, filename.replace(RESERVED_FILENAME_REGEX, ''))
+        newPath = join(newPath, filename.replace(RESERVED_FILENAME_REGEX, ''))
         return { path: newPath, length: file.length, offset: file.offset }
       })
       this.length = this.files.reduce((sum, file) => { return sum + file.length }, 0)
@@ -57,7 +57,7 @@ export default class Storage {
       const len = Number(opts.length) || Infinity
       this.files = [{
         offset: 0,
-        path: path.resolve(opts.path || path.join(TMP, this.name)),
+        path: resolve(opts.path || join(TMP, this.name)),
         length: len
       }]
       this.length = len
@@ -69,7 +69,7 @@ export default class Storage {
     this.files.forEach(file => {
       file.open = thunky(cb => {
         if (this.closed) return cb(new Error('Storage is closed'))
-        fs.mkdir(path.dirname(file.path), { recursive: true }, err => {
+        mkdir(dirname(file.path), { recursive: true }, err => {
           if (err) return cb(err)
           if (this.closed) return cb(new Error('Storage is closed'))
           cb(null, new RAF(file.path))
@@ -136,7 +136,7 @@ export default class Storage {
         return (cb) => {
           target.file.open((err, file) => {
             if (err) return cb(err)
-            file.write(target.offset, buf.slice(target.from, target.to), cb)
+            file.write(target.offset, targets.length === 1 ? buf : buf.subarray(target.from, target.to), cb)
           })
         }
       })
@@ -160,7 +160,7 @@ export default class Storage {
     }
 
     if (this.length === Infinity) {
-      if (rangeFrom === rangeTo) return nextTick(cb, null, Buffer.from(0))
+      if (rangeFrom === rangeTo) return nextTick(cb, null, new Uint8Array(0))
       this.files[0].open((err, file) => {
         if (err) return cb(err)
         const offset = (index * this.chunkLength) + rangeFrom
@@ -177,7 +177,7 @@ export default class Storage {
           return nextTick(cb, new Error('no files matching the requested range'))
         }
       }
-      if (rangeFrom === rangeTo) return nextTick(cb, null, Buffer.from(0))
+      if (rangeFrom === rangeTo) return nextTick(cb, null, new Uint8Array(0))
 
       const tasks = targets.map((target) => {
         return (cb) => {
@@ -202,7 +202,7 @@ export default class Storage {
 
       parallel(tasks, (err, buffers) => {
         if (err) return cb(err)
-        cb(null, Buffer.concat(buffers))
+        cb(null, concat(buffers))
       })
     }
   }
@@ -226,11 +226,11 @@ export default class Storage {
   destroy (cb) {
     this.close(() => {
       if (this.addUID && this.path) {
-        fs.rm(path.resolve(path.join(this.path, this.name)), { recursive: true, maxBusyTries: 10 }, cb)
+        rm(resolve(join(this.path, this.name)), { recursive: true, maxBusyTries: 10 }, cb)
       } else {
         const tasks = this.files.map((file) => {
           return (cb) => {
-            fs.rm(file.path, { recursive: true, maxRetries: 10 }, err => {
+            rm(file.path, { recursive: true, maxRetries: 10 }, err => {
               err && err.code === 'ENOENT' ? cb() : cb(err)
             })
           }
