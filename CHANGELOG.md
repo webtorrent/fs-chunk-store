@@ -1,3 +1,10 @@
+## [5.0.1](https://github.com/webtorrent/fs-chunk-store/compare/v5.0.0...v5.0.1) (2026-05-25)
+
+
+### Bug Fixes
+
+* **release:** update release.yml to add necessary permissions ([f868a05](https://github.com/webtorrent/fs-chunk-store/commit/f868a055e685692acba2ea6e021672aa0522541a))
+
 # [5.0.0](https://github.com/webtorrent/fs-chunk-store/compare/v4.1.0...v5.0.0) (2025-08-03)
 
 
